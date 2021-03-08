@@ -23,17 +23,21 @@
       grid-column: 1/5;      
       justify-content: flex-end;
       align-items: center;
+      text-align: right;
       border: solid;
       border-color: gray;
       background-color: lightgray;
+      overflow: hidden;
       
       
       
    }
 
    #textbox{
+      padding-left: 10px;
       padding-right: 10px;
       font-size: 50px;
+      font-family: monospace;
       
    }
 

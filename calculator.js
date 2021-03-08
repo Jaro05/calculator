@@ -4,6 +4,7 @@ let num1 = "";
 let num2 = "";
 let operator = "";
 let textbox = document.querySelector("#textbox");
+let numOfoperations = 0;
 
 let clear = document.querySelector("#clear");
 clear.addEventListener("click",() => {
@@ -53,6 +54,11 @@ backspace.addEventListener("click", () => {
 let numbers = document.querySelectorAll(".numbers");
 numbers.forEach(number => {
     number.addEventListener("click",() => {
+        if(numOfoperations == 1){
+            textbox.textContent = "";
+            currentNum = 0;
+        }
+        numOfoperations = 0;
         textbox.textContent += number.textContent;
         
         currentNum += "" + number.textContent;
@@ -63,13 +69,20 @@ numbers.forEach(number => {
         }else{
             num2 = currentNum;
         }
-        
+
+        if(textbox.textContent.length > 15){
+            textbox.textContent = "too big :)";
+            resetVariables();
+            total = 0;
+            numOfoperations = 1;
+        }
   });
 });
 
 let operators = document.querySelectorAll(".operators");
 operators.forEach(item => {
     item.addEventListener("click",() => {
+       numOfoperations = 0;
        textbox.textContent += "" + item.textContent;
        if(operator !== ""){
            total = (operate(num1,num2,operator));
@@ -81,6 +94,9 @@ operators.forEach(item => {
     });
 });
 
+
+
+
 let decimal = document.querySelector("#decimal");
 decimal.addEventListener("click", () => {
     textbox.textContent += ".";
@@ -89,6 +105,7 @@ decimal.addEventListener("click", () => {
 
 let equals = document.querySelector("#equals");
 equals.addEventListener("click", () => {
+    numOfoperations = 1;
     num1 = parseFloat(num1);
     num2 = parseFloat(num2);
     if(isNaN(num1)||isNaN(num2)){  
@@ -96,10 +113,7 @@ equals.addEventListener("click", () => {
         resetVariables();
     }
     if(num1!=="" && num2!=="" && operator!==""){
-        if(isNaN(num1/num2)||num1/num2 == Infinity){
-            total="Go back to school, can not divide by 0";
-            resetVariables();
-        }else{
+        if(isNaN(operate(num1,num2,operator))==false){
             total = (operate(num1,num2,operator));
             total = total.toFixed(10);
             total = total.replace(/0+$/,'').replace(/\.$/,'');//look at this and see what is happening
@@ -121,7 +135,14 @@ function operate(num1,num2,operator){
         return(subtractfunc(num1,num2));
     }
     if(operator == "/"){
-        return(dividefunc(num1,num2));
+
+        if(isNaN(num1/num2)||num1/num2 == Infinity){
+            total="Go back to school, can not divide by 0";
+            resetVariables();
+        }
+        else{
+            return(dividefunc(num1,num2));
+        }
     }
     if(operator == "*"){
         return(multiplyfunc(num1,num2));
@@ -142,10 +163,7 @@ function multiplyfunc(num1,num2){
 }
 
 function dividefunc(num1,num2){
-    
-    
     return(num1/num2);
-    
 }
 
 
